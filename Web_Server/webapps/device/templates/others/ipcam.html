@@ -1,0 +1,273 @@
+{% load dashboard_extras %}
+{% load switch_case %}
+{% load device_count_in_zone %}
+{% load timedelta %}
+{% load user_role %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>BEMOSS Zone 1 - IP CAM</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="/static/css/thin-admin.css" rel="stylesheet" media="screen">
+<link href="/static/css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="/static/weathericons/css/weather-icons.css" rel="stylesheet" media="screen">
+<link media="screen" rel="stylesheet" href="/static/font-awesome-4.0.3/css/font-awesome.min.css">
+<link href="/static/style/style.css" rel="stylesheet">
+<link href="/static/style/dashboard.css" rel="stylesheet">
+<link href="/static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<!-- Notify CSS -->
+<link href="/static/css/bootstrap-notify/bootstrap-notify.css" rel="stylesheet">
+
+<!-- Custom Styles -->
+<link href="/static/css/bootstrap-notify/styles/alert-bangtidy.css" rel="stylesheet">
+<link href="/static/css/bootstrap-notify/styles/alert-blackgloss.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/assets/slider_enhancer/jquery-ui-slider-pips.css">
+<link rel="stylesheet" href="/static/assets/colorpicker/css/colpick.css" type="text/css"/>
+
+<!--  Slider -->
+<script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+<link href="/static/css/jquery-ui.css" rel="stylesheet" type="text/css">
+
+
+
+<!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- <script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script> -->
+<style>
+.color-box {
+	float:center;
+	width:100px;
+	height:50px;
+	margin-left: 35%;
+	margin-top: 4%;
+	border: 1px solid white;
+}
+.slider {
+    float: left;
+    clear: left;
+    width: 70%;
+    margin-left: 20%;
+	margin-top: 4%;
+
+    background: #5e9ae2; /* Old browsers */
+	background: -moz-linear-gradient(left, #000000 0%, #ffffff 100%) !important; /* FireFox 3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#000000), color-stop(100%,#ffffff)); /* Chrome, Safari 4+ */
+	background: -webkit-linear-gradient(left, #000000 0%,#ffffff 100%); /* Chrome 10+, Safari 5.1+ */
+	background: -o-linear-gradient(left, #000000 0%,#ffffff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, #000000 0%,#ffffff 100%); /* IE 10+ */
+	background: linear-gradient(left,#000000 0%,#ffffff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=’#000000’, endColorstr=’#ffffff′,GradientType=1 ); /* IE 6-9 */
+  }
+
+</style>
+    <script>
+
+ var _type = "{{ device_data.agent_id }}";
+         var agent_id = "{{ device_data.agent_id }}";
+         var stream="{{ device_data.data.stream }}";
+var device_data = jQuery.parseJSON('{{ device_data|device_data_jsonify}}');
+        var zone = {{ device_info.node.node_id }};
+    var local= "{{ device_info.local }}";
+        var remote= "{{ device_info.remote }}";
+        var comment = "{{ device_info.comment }}";
+        var username = "{{ device_info.username }}";
+
+var role = "{{ request.user.get_profile.group.name|lower }}";
+
+    </script>
+</head>
+<body>
+{% include 'common/top_nav.html' %}
+<div class="wrapper">
+{% include 'common/side_nav.html' %}
+  <div class="page-content">
+  	<form action="" method="post">
+  	{% csrf_token %}
+    <div class="content container">
+        <div class="row">
+        <div class="col-lg-12">
+          <h2 class="page-title">{{device_info.node.node_name}} : {{device_info.nickname}}</h2>
+        </div>
+      </div>
+       <div class="row">
+    <div class="col-md-6 col-xs-12 col-sm-6">
+                <div  class="stats-container">
+              <div class="stats-heading">Control Camera Display
+              <div class="stats-body h6">
+
+ <div class="col-md-6 col-xs-12 col-sm-6" id="dispp2"> <a href="#" class="stats-container" ></br>
+                          <div class="stats-heading"> Brightness</div>
+                          <div class="stats-body-alt text-center">
+                            <div class="text-center" >
+                            <h5> <div class="slider" id="brightness"></div></h5>
+                               </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h5>BRIGHTNESS <span id="brightness_val">{{ device_data.data|get_item_in_dict:'brightness' }}</span>%</h5>
+
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Brightness Value <input type="text" id="brightness_value" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px"/></div></div>
+                           </a> </div>
+
+
+
+ <div class="col-md-6 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" ></br>
+              <div class="stats-heading"> Contrast</div>
+              <div class="stats-body-alt">
+                <div class="text-center" >
+                 <h5> <div class="slider" id="contrast"></div></h5>
+                </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h5> contrast: <span id="contrast_val">{{ device_data.data|get_item_in_dict:'contrast' }}</span>%</h5>
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Contrast Value<input type="text" id="contrast_value" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px"/></div></div>
+              </a> </div>
+
+
+<div class="col-md-6 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" ></br>
+              <div class="stats-heading"> hue</div>
+              <div class="stats-body-alt">
+                <div class="text-center" >
+                 <h5> <div class="slider" id="hue"></div></h5>
+                </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h5> hue: <span id="hue_val">{{ device_data.data|get_item_in_dict:'hue' }}</span>%</h5>
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Hue Value <input type="text" id="hue_value" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px"/></div></div>
+              </a> </div>
+
+
+<div class="col-md-6 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" ></br>
+              <div class="stats-heading"> saturation</div>
+              <div class="stats-body-alt">
+                <div class="text-center" >
+                 <h5> <div class="slider" id="saturation"></div></h5>
+                </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h5> saturation: <span id="saturation_val">{{ device_data.data|get_item_in_dict:'saturation' }}</span>%</h5>
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Saturation Value <input type="text" id="saturation_value" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px"/></div></div>
+              </a></br></br> </div>
+
+
+
+</br>
+
+ <div class="text-center"></br>
+                                {% if request.user|has_group:'Admin' or  request.user|has_group:'Zone Manager'  %}
+</br>
+                                <button type="button" class="btn btn-default" id="submit_display_data"><i class="icon-ok"
+                                        ></i> Submit Display Changes</button>{% endif %}
+                                </div>
+              </div>
+</div></div></div>
+ {% if device_data.data|get_item_in_dict:'stream' == 'http_stream' %}
+            <object id="aa">
+
+<embed width="650" height="500" id="source" class="camera" src="{{device_info.local}}/cgi-bin/CGIStream.cgi?cmd=GetMJStream&usr={{device_info.username}}&pwd={{device_info.comment}}">
+</embed></object>
+                      <object id="aa2">
+
+<embed width="650" height="500" id="source1">
+</embed></object>{% else %}
+           <object id="aa3">
+<!--src="{{device_info.local}}/cgi-bin/CGIStream.cgi?cmd=GetMJStream&usr={{device_info.username}}&pwd={{device_info.comment}}-->
+<embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" version="videoLAN.VLCPlugin.2" width="650" height="500" id="vlc" class="mycamera" >
+</embed></object>{%endif%}
+
+      	</div></div>
+
+	</form>
+    </div>
+  </div>
+
+
+<div class="bottom-nav footer"> <span class="h6"> 2013-2017 &copy; Building Energy Management Open Source Software. </span><br/></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/left_nav_slider.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery191.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery.jqplot.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery-1.10.2.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/ui/jquery-ui.js"></script>
+<script src="/static/assets/slider_enhancer/jquery-ui-slider-pips.min.js"></script>
+<script src="/static/assets/colorpicker/js/colpick.js" type="text/javascript"></script>
+
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/ipcam.js"></script>
+<script type="text/javascript" src="/static/app_js/make_current.js"></script>
+<script src="/static/js/select-checkbox.js"></script>
+<script src="/static/js/to-do-admin.js"></script>
+
+<script class="include" type="text/javascript" src="/static/javascript/jquery-1.10.2.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/ui/jquery-ui.js"></script>
+<script src="/static/assets/slider_enhancer/jquery-ui-slider-pips.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+
+<script class="include" type="text/javascript" src="/static/app_js/bootstrap-notify.js"></script>
+
+
+
+    <script>
+$.csrftoken();
+
+    function imageExists(url, callback) {
+      var img = new Image();
+      img.onload = function() { callback(true); };
+      img.onerror = function() { callback(false); };
+      img.src = url;
+    }
+    if (stream=="http_stream"){
+    var local_call=local+"cgi-bin/CGIStream.cgi?cmd=GetMJStream&usr="+username+"&pwd="+comment;
+    var remote_call=remote+"cgi-bin/CGIStream.cgi?cmd=GetMJStream&usr="+username+"&pwd="+comment;
+    }else{
+    //rtsp://aribemoss:ari900@192.168.10.42:8899/videoMain
+    local=local.replace("http://","")
+    remote=remote.replace("http://","")
+    var local_call="rtsp://"+username+":"+ comment+"@"+local+"videoMain";
+    var remote_call="rtsp://"+username+":"+ comment+"@"+remote +"videoMain";
+    }
+     //document.getElementById("source").src=local_call.replace(/&amp;/g, '&');
+    imageExists(local_call, function(exists) {
+    console.log(exists)
+      if( exists==true){
+      var final_call=local_call;}
+      else{
+      var final_call=remote_call;}
+      console.log(final_call)
+        var decoded = final_call.replace(/&amp;/g, '&');
+        console.log(decoded)
+       if (stream=="http_stream"){
+      document.getElementById("source1").src=decoded;
+       $(".camera").hide();}
+else
+{
+var vlc=document.getElementById("vlc");
+
+vlc.playlist.add(decoded);
+vlc.play;
+}
+    });
+//var vlc=document.getElementById("vlc");
+//vlc.playlist.add("rtsp://aribemoss:ari900@192.168.10.42:8899/videoMain");
+//vlc.play;
+
+</script>
+
+<!--switcher html start-->
+{% include 'common/theme_changer.html' %}
+</body>
+</html>

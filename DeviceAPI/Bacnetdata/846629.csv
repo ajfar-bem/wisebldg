@@ -1,0 +1,44 @@
+Reference Point Name,BACnet Object Type,Index
+Network Bridge,device,846629
+LMLS-400-1,analogInput,4001
+DIMMER-1,analogOutput,1
+DIMMER-2,analogOutput,2
+DIMMER-3,analogOutput,3
+WATTAGE-1,analogValue,1
+VOLTAGE-1,analogValue,401
+CURRENT-1,analogValue,501
+LOAD SHED LEVEL-1,analogValue,601
+LOAD SHED LEVEL-2,analogValue,602
+LOAD SHED LEVEL-3,analogValue,603
+MS/TP MAC,analogValue,901
+MS/TP BAUD,analogValue,902
+ROOM SIZE,analogValue,903
+TOTAL ROOM WATTAGE,analogValue,904
+ROOM WATTS PER SQFT,analogValue,905
+TOTAL PLUGLOAD WATTAGE,analogValue,906
+OpenADR MEDIUM WATTS,analogValue,907
+OpenADR HIGH WATTS,analogValue,908
+OpenADR SPECIAL WATTS,analogValue,909
+OpenADR THRESHOLD WATTS,analogValue,910
+ROOM RELIABILITY POLLING INTERVAL,analogValue,911
+MS/TP NODE COUNT,analogValue,999
+DAYLIGHT FADE RATE-1,analogValue,4101
+DAYLIGHT DAY SETPOINT-1,analogValue,4201
+DAYLIGHT NIGHT SETPOINT-1,analogValue,4301
+DAYLIGHT OFF DELAY-1,analogValue,4401
+DAYLIGHT ON SETPOINT-1,analogValue,4501
+DAYLIGHT OFF SETPOINT-1,analogValue,4601
+RELAY-1,binaryOutput,1
+RELAY-2,binaryOutput,2
+RELAY-3,binaryOutput,3
+NORMAL/AFTER HOURS,binaryValue,1
+SWITCH LOCK CONTROL,binaryValue,2
+ROOM OCCUPANCY STATUS,binaryValue,3
+ROOM FORCE ON,binaryValue,4
+ROOM FORCE OFF,binaryValue,5
+SCENE-CONTROL,multiStateValue,1
+LOAD-SHED-CONTROL,multiStateValue,2
+DEMAND-RESPONSE-CONTROL,multiStateValue,3
+DEMAND-RESPONSE-SHED-MODE,multiStateValue,4
+DAYLIGHT OPERATING MODE-1,multiStateValue,4001
+DAYLIGHT OFF MULTIPLIER-1,multiStateValue,4101

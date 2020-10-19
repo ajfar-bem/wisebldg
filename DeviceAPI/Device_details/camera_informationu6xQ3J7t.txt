@@ -1,0 +1,9 @@
+Device id: u6xQ3J7tbYBVUPukxwF99iOvGAVz6AHYOStS7zxlpRw0LEt0KSvacw
+Structure id: cx9judmeiFnwXI6DX7nYng34z5KxRzu39Pxifpq0tYFEg4sZoS7j9w
+Software version: 217-610040
+Public share status: True
+Streaming status:True
+Last time camera status changed: 2018-07-23T16:00:40.000Z
+Sound detected in last event: False
+Motion detected in last event: True
+Person detected in last event: False

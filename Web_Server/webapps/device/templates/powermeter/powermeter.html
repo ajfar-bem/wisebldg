@@ -1,0 +1,636 @@
+{% load dashboard_extras %}
+{% load switch_case %}
+{% load device_count_in_zone %}
+{% load timedelta %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>BEMOSS - PowerMeter</title>
+<!--
+
+# Authors: Kruthika Rathinavel
+# Version: 2.0
+# Email: kruthika@vt.edu
+# Created: "2014-10-13 18:45:40"
+# Updated: "2015-02-13 15:06:41"
+
+
+Copyright © 2014 by Virginia Polytechnic Institute and State University
+All rights reserved
+
+Virginia Polytechnic Institute and State University (Virginia Tech) owns the copyright for the BEMOSS software and its
+associated documentation ("Software") and retains rights to grant research rights under patents related to
+the BEMOSS software to other academic institutions or non-profit research institutions.
+You should carefully read the following terms and conditions before using this software.
+Your use of this Software indicates your acceptance of this license agreement and all terms and conditions.
+
+You are hereby licensed to use the Software for Non-Commercial Purpose only.  Non-Commercial Purpose means the
+use of the Software solely for research.  Non-Commercial Purpose excludes, without limitation, any use of
+the Software, as part of, or in any way in connection with a product or service which is sold, offered for sale,
+licensed, leased, loaned, or rented.  Permission to use, copy, modify, and distribute this compilation
+for Non-Commercial Purpose to other academic institutions or non-profit research institutions is hereby granted
+without fee, subject to the following terms of this license.
+
+Commercial Use: If you desire to use the software for profit-making or commercial purposes,
+you agree to negotiate in good faith a license with Virginia Tech prior to such profit-making or commercial use.
+Virginia Tech shall have no obligation to grant such license to you, and may grant exclusive or non-exclusive
+licenses to others. You may contact the following by email to discuss commercial use:: vtippatents@vtip.org
+
+Limitation of Liability: IN NO EVENT WILL VIRGINIA TECH, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR
+CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO
+LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE
+OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF VIRGINIA TECH OR OTHER PARTY HAS BEEN ADVISED
+OF THE POSSIBILITY OF SUCH DAMAGES.
+
+For full terms and conditions, please visit https://bitbucket.org/bemoss/bemoss_os.
+
+Address all correspondence regarding this license to Virginia Tech's electronic mail address:: vtippatents@vtip.org
+
+
+    -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="/static/css/thin-admin.css" rel="stylesheet" media="screen">
+<link href="/static/css/font-awesome.css" rel="stylesheet" media="screen">
+    <link media="screen" rel="stylesheet" href="/static/font-awesome-4.0.3/css/font-awesome.min.css">
+<link href="/static/style/style.css" rel="stylesheet">
+<link href="/static/style/dashboard.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="/static/style/jquery.jqplot.min.css" />
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+<!-- Notify CSS -->
+<link href="/static/css/bootstrap-notify/bootstrap-notify.css" rel="stylesheet">
+
+<!-- Custom Styles -->
+<link href="/static/css/bootstrap-notify/styles/alert-bangtidy.css" rel="stylesheet">
+<link href="/static/css/bootstrap-notify/styles/alert-blackgloss.css" rel="stylesheet">
+    <script src="/static/js/jquery.js"></script>
+
+<script>
+
+    var device_data = jQuery.parseJSON('{{ device_data|device_data_jsonify}}');
+var device_info = "{{device_zone}}/power_meter/{{device_id}}";
+</script>
+
+
+</head>
+<body>
+{% include 'common/top_nav.html' %}
+<div class="wrapper">
+{% include 'common/side_nav.html' %}
+  <div class="page-content">
+
+    <form action="" method="post">
+  	{% csrf_token %}
+    <div class="content container">
+      <div class="row">
+        <div class="col-md-12">
+          <h2 class="page-title">{{device_info.node.node_name}} : {{device_info.nickname}}</h2>
+        </div>
+      </div>
+            <div class="row">
+                <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Power</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="power_sum">{{ device_data.data|get_item_in_dict:'power' }}</span><span> W</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="power_a">{{ device_data.data|get_item_in_dict:'power_a' }}</span><span> W</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="power_b">{{ device_data.data|get_item_in_dict:'power_b' }}</span><span> W</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="power_c">{{ device_data.data|get_item_in_dict:'power_c' }}</span><span> W</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Voltage</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">{% if device_data.data|get_item_in_dict:'voltage' %}
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase-Phase</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="voltage_avg">{{ device_data.data|get_item_in_dict:'voltage' }}</span><span> Volts</span></h2></div>
+              </div>
+              </a></div>{% endif %}
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="voltage_a">{{ device_data.data|get_item_in_dict:'voltage_a' }}</span><span> Volts</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="voltage_b">{{ device_data.data|get_item_in_dict:'voltage_b' }}</span><span> Volts</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="voltage_c">{{ device_data.data|get_item_in_dict:'voltage_c' }}</span><span> Volts</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div></div>
+
+        <div class="row">
+            <div class="col-md-2 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center" > <i class="icon-bookmark"></i>
+              <h3>Frequency</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <a href="#" class="stats-container"><br/>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="freq">{{ device_data.data|get_item_in_dict:'frequency' }}</span><span> Hz</span></h2></div>
+
+
+              <!-- /shortcuts -->
+            </div></a>
+            <!-- /widget-content -->
+          </div></div>
+        </div>
+            <div class="col-md-4 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Current</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-4 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="current_a">{{ device_data.data|get_item_in_dict:'current_a' }}</span><span> A</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-4 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="current_b">{{ device_data.data|get_item_in_dict:'current_b' }}</span><span> A</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-4 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="current_c">{{ device_data.data|get_item_in_dict:'current_c' }}</span><span> A</span></h2></div>
+              </div>
+              </a></div>
+
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Power Factor</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Average</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pf_avg">{{ device_data.data|get_item_in_dict:'powerfactor' }}</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pf_a">{{ device_data.data|get_item_in_dict:'powerfactor_a' }}</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pf_b">{{ device_data.data|get_item_in_dict:'powerfactor_b' }}</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pf_c">{{ device_data.data|get_item_in_dict:'powerfactor_c' }}</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div></div>
+        </div>
+</div>
+    <div class="row">
+     <div class="col-lg-10">
+          <div class="widgetcontainer">
+                <!--row start-->
+                <div class="row">
+                    <div class="col-md-4"></div>
+                <div class="col-md-1">
+                    <!--<button type="button" class="btn btn-default btn-success" id="vmore"><i class="icon-bar-chart"></i> View More</button>-->
+                    <button type="button" class="btn btn-default btn-primary" id="vless" style="display: none;"><i class="icon-bar-chart"></i> View Less</button>
+                    </div>
+                    <div class="col-md-4"><span style="display:inline-block; width: 445;"></span>
+                    <a href={% url 'charts-view-device-chart' device_data.agent.mac_address %}><button type="button" class="btn btn-default btn-danger" ><i class="icon-bar-chart"></i> View Power Consumption Statistics</button></a>
+                </div>
+                    </div>
+                <!--row end-->
+            </div>
+          </div>
+</div>
+<br/>
+        <div id="view_more" style="display: none;">
+        <div class="row">
+                <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Power Apparent</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pa_sum">{{ device_data.data|get_item_in_dict:'appar_power' }}</span><span> kVA</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pa_a">{{ device_data.data|get_item_in_dict:'appar_power_a' }}</span><span> kVA</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pa_b">{{ device_data.data|get_item_in_dict:'appar_power_b' }}</span><span> kVA</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pa_c">{{ device_data.data|get_item_in_dict:'appar_power_c' }}</span><span> kVA</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+        <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header text-center"> <i class="icon-bookmark"></i>
+              <h3>Power Reactive</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pr_sum">{{ device_data.data|get_item_in_dict:'reac_power' }}</span><span> kVAR</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pr_a">{{ device_data.data|get_item_in_dict:'reac_power_a' }}</span><span> kVAR</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pr_b">{{ device_data.data|get_item_in_dict:'reac_power_b' }}</span><span> kVAR</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="pr_c">{{ device_data.data|get_item_in_dict:'reac_power_c' }}</span><span> kVAR</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+    </div>
+            {% if device_data.data|get_item_in_dict:'energy' %}
+        <div class="row"><div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header"> <i class="icon-bookmark"></i>
+              <h3>Energy Apparent</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="ea_sum">{{ device_data.energy_apparent_sum }}</span><span> kVAh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="ea_a">{{ device_data.energy_apparent_a }}</span><span> kVAh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="ea_b">{{ device_data.energy_apparent_b }}</span><span> kVAh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="ea_c">{{ device_data.energy_apparent_c }}</span><span> kVAh</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+                <div class="col-md-6 col-xs-12 col-sm-6">
+        <div class="widget">
+            <div class="widget-header"> <i class="icon-bookmark"></i>
+              <h3>Energy Reactive</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="er_sum">{{ device_data.energy_reactive_sum }}</span><span> kVARh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="er_a">{{ device_data.energy_reactive_a }}</span><span> kVARh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="er_b">{{ device_data.energy_reactive_b }}</span><span> kVARh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-3 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="er_c">{{ device_data.energy_reactive_c }}</span><span> kVARh</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+        </div>
+        </div>
+            {% endif %} {% if device_data.data|get_item_in_dict:'energy' %}
+         <div class="row"><div class="col-md-12 col-xs-12 col-sm-6 ">
+        <div class="widget">
+            <div class="widget-header"> <i class="icon-bookmark"></i>
+              <h3>Energy Net</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-2 col-xs-12 col-sm-6 col-md-offset-1">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_sum">{{ device_data.energy_sum }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum NR</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_sum_nr">{{ device_data.energy_sum_nr }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_a">{{ device_data.energy_a_net }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_b">{{ device_data.energy_b_net }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_c">{{ device_data.energy_c_net }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+
+        </div></div>{% endif %} {% if device_data.data|get_item_in_dict:'energy' %}
+                <div class="row"><div class="col-md-12 col-xs-12 col-sm-6 ">
+        <div class="widget">
+            <div class="widget-header"> <i class="icon-bookmark"></i>
+              <h3>Energy Pos</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-2 col-xs-12 col-sm-6 col-md-offset-1">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_pos_sum">{{ device_data.energy_pos_sum }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum NR</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_pos_sum_nr">{{ device_data.energy_pos_sum_nr }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_pos_a">{{ device_data.energy_pos_a }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_pos_b">{{ device_data.energy_pos_b }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_pos_c">{{ device_data.energy_pos_c }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+
+        </div></div>{% endif %} {% if device_data.data|get_item_in_dict:'energy' %}
+        <div class="row"><div class="col-md-12 col-xs-12 col-sm-6 ">
+        <div class="widget">
+            <div class="widget-header"> <i class="icon-bookmark"></i>
+              <h3>Energy Neg</h3>
+            </div>
+            <!-- /widget-header -->
+            <div class="widget-content">
+                <div class="col-md-2 col-xs-12 col-sm-6 col-md-offset-1">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_neg_sum">{{ device_data.energy_neg_sum }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Sum NR</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_neg_sum_nr">{{ device_data.energy_neg_sum_nr }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase A</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_neg_a">{{ device_data.energy_neg_a }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase B</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_neg_b">{{ device_data.energy_neg_b }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+                <div class="col-md-2 col-xs-12 col-sm-6">
+                <a href="#" class="stats-container">
+              <div class="stats-heading">Phase C</div>
+              <div class="stats-body-alt">
+                <div class="text-center"><h2><span id="e_neg_c">{{ device_data.energy_neg_c }}</span><span> kWh</span></h2></div>
+              </div>
+              </a></div>
+
+              <!-- /shortcuts -->
+            </div>
+            <!-- /widget-content -->
+          </div>
+
+        </div></div>{% endif %}</div>
+    </form>
+  </div>
+</div>
+<div class="bottom-nav footer"> 2013-2017 &copy; Building Energy Management Open Source Software. </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/static/js/jquery.js"></script> 
+<script src="/static/js/bootstrap.min.js"></script> 
+<script type="text/javascript" src="/static/js/left_nav_slider.js"></script>
+
+<script class="include" type="text/javascript" src="/static/javascript/jquery191.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/bootstrap-notify.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/gauge.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/powermeter.js"></script>
+<script type="text/javascript" src="/static/app_js/make_current.js"></script>
+
+<!--switcher html start-->
+{% include 'theme_changer.html' %}
+
+
+
+</body>
+</html>

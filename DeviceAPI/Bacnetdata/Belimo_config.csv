@@ -1,0 +1,71 @@
+Device number,Reference Point Name,BACnet Object Type,Index
+1,RelPos,analogInput,1
+1,AbsPos,analogInput,2
+1,RelFlow,analogInput,10
+1,AbsFlow_lmin,analogInput,11
+1,AbsFlow_m3h,analogInput,12
+1,AbsFlow_gpm,analogInput,13
+1,AbsFlow_ls,analogInput,14
+1,AbsFlow_lh,analogInput,15
+1,SpAbs_m3h,analogInput,17
+1,SpAbs_lmin,analogInput,16
+1,SpAbs_ls,analogInput,19
+1,ResetHeating_E,binaryOutput,32
+1,SpAbs_gpm,analogInput,18
+1,SpAnalog_V,analogInput,21
+1,SpAbs_lh,analogInput,20
+1,T2_C,analogInput,23
+1,T1_C,analogInput,22
+1,T1_F,analogInput,25
+1,DeltaT_K,analogInput,24
+1,DeltaT_F,analogInput,27
+1,T2_F,analogInput,26
+1,E_Cooling_kWh,analogInput,31
+1,AbsPower_kW,analogInput,30
+1,RstErrCount,binaryValue,100
+1,E_Heating_MJ,analogInput,34
+1,AbsPower_kBTUh,analogInput,35
+1,E_Heating_kWh,analogInput,32
+1,Excessive utilization,binaryInput,112
+1,E_Cooling_MJ,analogInput,33
+1,E_Cooling_kBTU,analogInput,36
+1,E_Heating_kBTU,analogInput,37
+1,RelPower,analogInput,40
+1,E_Cooling_tonh,analogInput,46
+1,E_Heating_tonh,analogInput,47
+1,AbsPower_ton,analogInput,45
+1,ResetCooling_E,binaryOutput,31
+1,GlycolConcentration,analogInput,48
+1,Fault Sensor T2,binaryInput,102
+1,Fault Flow Sensor,binaryInput,103
+1,Fault Sensor T1,binaryInput,101
+1,Fault Airbubbles,binaryInput,106
+1,Fault Flow not reached,binaryInput,107
+1,Fault Actuator cannot move,binaryInput,104
+1,Fault Flow with closed valve,binaryInput,105
+1,Intern Activity,binaryInput,110
+1,Watchdog trigger,binaryInput,111
+1,Fault Power not realized,binaryInput,108
+1,Fault Gear disengaged,binaryInput,109
+1,Pmax_kW,analogValue,95
+1,Vmax_gpm,analogValue,91
+1,Vmax_lmin,analogValue,90
+1,SpSource,multiStateOutput,2
+1,Override,multiStateOutput,1
+1,SpRel,analogOutput,1
+1,SpPosReached,binaryInput,1
+1,Vnom_gpm,analogInput,102
+1,ErrorState,analogInput,100
+1,Vnom_lmin,analogInput,101
+1,Pnom_kW,analogInput,106
+1,Pnom_kBTUh,analogInput,107
+1,SpFlow_DeltaT_lmin,analogValue,108
+1,ControlMode,multiStateValue,100
+1,SPFlow_DeltaT_gpm,analogValue,109
+1,DeltaT_Limitation,multiStateValue,101
+1,SpDeltaT_F,analogValue,104
+1,Pmax,analogValue,105
+1,SpDeltaT_K,analogValue,103
+1,Vmax,analogValue,100
+1,Pmax_kBTUh,analogValue,96
+1,DeltaT_Mgr_Status,multiStateInput,102

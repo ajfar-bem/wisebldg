@@ -1,0 +1,376 @@
+<!--
+Copyright (c) 2016, Virginia Tech
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+ following conditions are met:
+1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+disclaimer in the documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The views and conclusions contained in the software and documentation are those of the authors and should not be
+interpreted as representing official policies, either expressed or implied, of the FreeBSD Project.
+
+This material was prepared as an account of work sponsored by an agency of the United States Government. Neither the
+United States Government nor the United States Department of Energy, nor Virginia Tech, nor any of their employees,
+nor any jurisdiction or organization that has cooperated in the development of these materials, makes any warranty,
+express or implied, or assumes any legal liability or responsibility for the accuracy, completeness, or usefulness or
+any information, apparatus, product, software, or process disclosed, or represents that its use would not infringe
+privately owned rights.
+
+Reference herein to any specific commercial product, process, or service by trade name, trademark, manufacturer, or
+otherwise does not necessarily constitute or imply its endorsement, recommendation, favoring by the United States
+Government or any agency thereof, or Virginia Tech - Advanced Research Institute. The views and opinions of authors
+expressed herein do not necessarily state or reflect those of the United States Government or any agency thereof.
+
+VIRGINIA TECH – ADVANCED RESEARCH INSTITUTE
+under Contract DE-EE0006352
+
+#__author__ = "BEMOSS Team"
+#__credits__ = ""
+#__version__ = "2.0"
+#__maintainer__ = "BEMOSS Team"
+#__email__ = "aribemoss@gmail.com"
+#__website__ = "www.bemoss.org"
+#__created__ = "2014-09-12 12:04:50"
+#__lastUpdated__ = "2016-03-14 11:23:33" -->
+
+{% load dashboard_extras %}
+{% load switch_case %}
+{% load timedelta %}
+{% load device_count_in_zone %}
+{% load check_false %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demand Response Test</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+    <link href="/static/css/thin-admin.css" rel="stylesheet" media="screen">
+    <link href="/static/css/font-awesome.css" rel="stylesheet" media="screen">
+    <link media="screen" rel="stylesheet" href="/static/font-awesome-4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/fam-icons/fam-icons.css">
+    <link href="/static/style/style.css" rel="stylesheet">
+    <link href="/static/css/alerts.css" rel="stylesheet">
+    <link href="/static/css/demo_page.css" rel="stylesheet">
+    <link href="/static/css/demo_table.css" rel="stylesheet">
+
+
+    <!-- Notify CSS -->
+    <link href="/static/css/bootstrap-notify/bootstrap-notify.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="/static/css/bootstrap-notify/styles/alert-bangtidy.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-notify/styles/alert-blackgloss.css" rel="stylesheet">
+
+    <script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+    <script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.js"></script>
+    <script class="include" type="text/javascript" src="/static/app_js/bootstrap-notify.js"></script>
+    <script type="text/javascript" src="/static/app_js/make_current.js"></script>
+    <!--[if IE]><script type="text/javascript" src="/static/assets/jqueryknobdial/excanvas.js"></script><![endif]-->
+    <script>
+        var app_id = "{{ app_id }}";
+        var hvac = "{{ hvacs|safe }}";
+        var lighting = "{{ lights|safe }}";
+        var plugload = "{{ plugs|safe }}";
+    </script>
+
+</head>
+<body>
+
+{% include 'common/top_nav.html' %}
+<div class="wrapper">
+    {% include 'common/side_nav.html' %}
+    <div class="page-content" id="dashboard_content">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="content container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 class="page-title">Demand Response Test</h2>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row top-buffer">
+
+
+                    <div class="col-lg-12">
+                        <div class="widget">
+                            <div class="widget-header">
+                                <i class="icon-key"></i>
+
+                                <h3>BEMOSS Demand Response Configuration</h3>
+                            </div>
+                            <div class="widget-content">
+                                {% if devSelected %}
+
+                                <div class="row">
+                                    <div class="text-left bottom-buffer ">
+                                        <p>This is a brief description of demand response.
+                                        </p>
+                                        <br>
+                                        <div class="row"><div class="col-lg-10"><div class="widget"><div class="widget-header"> <i class="icon-time"></i>
+              <h3>Time Setup</h3>
+            </div>
+                                            <div class="widget-content">
+        <div class="col-lg-12">
+       <div h5> The DR event will start within: </div>
+            <div><input type="text"
+                        {% ifequal start None %}
+                        placeholder="Please input in how many minutes DR will started"
+                        {% else %}
+                        placeholder="{{ start }}"
+                        {% endifequal %}
+                        id="start_in" name="start_in" class="form-control"
+                                                                                               value="">
+                                                                                    </div><br/>
+            <div h5> The DR event will last: </div>
+            <div><input type="text"
+                        {% ifequal end None %}
+                        placeholder="Please input how many minutes DR will last"
+                        {% else %}
+                        placeholder="{{ end }}"
+                        {% endifequal %}
+                        id="dr_duration" name="dr_duration" class="form-control"
+                                   value="">
+                                                                                    </div><br/>
+
+                                                                            </div></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                                </div>
+
+
+       <div class="row"><div class="col-lg-12"><div class="widget"><div class="widget-header"> <i class="icon-wrench"></i>
+              <h3>Device Configuration</h3>
+
+            </div>
+           <div id="dev_dr_settings">
+                     <div class="row">
+                     <div class="col-lg-12">
+					<div class="widget">
+
+					<div class="widget-content" id="monday">
+				      <table class="table table-responsive" id="hvac_config">
+	                  <thead>
+	                    <tr>
+	                      <th class="col-md-1"><strong>HVAC</strong></th>
+	                      <th class="col-md-2"><strong>Nickname</strong></th>
+                          <th class="col-md-2"><strong>Cool Set Point</strong></th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+
+                          {% for hvac in devSelected|get_item_in_dict:'hvac' %}
+                            <tr>
+                                <td class="col-sm-1">{{ hvac }}</td>
+                                <td class="col-sm-2">
+                                    {{ nickname|get_item_in_dict:hvac }}
+                                </td>
+                                <td class="col-sm-2">
+                                    <input type="text" id="coolsetpoint_{{ hvac }}" name="{{ hvac }}"
+                                           {% ifnotequal hvacs|get_item_in_dict:hvac None %}
+                                           placeholder="{{ hvacs|get_item_in_dict:hvac }}"
+                                           {% endifnotequal %}
+                                           style="width:20%" >    &deg;F
+                                </td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+	                </table>
+                        <table class="table table-responsive" id="lighting_config">
+	                  <thead>
+	                    <tr>
+	                      <th class="col-md-1"><strong>Light</strong></th>
+	                      <th class="col-md-2"><strong>Nickname</strong></th>
+                          <th class="col-md-2"><strong>Brightness</strong></th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+
+                          {% for light in devSelected|get_item_in_dict:'lighting' %}
+                            <tr>
+                                <td class="col-sm-1">{{ light }}</td>
+                                <td class="col-sm-2">
+                                    {{ nickname|get_item_in_dict:light }}
+                                </td>
+                                <td class="col-sm-2">
+                                    <input type="text" id="brightness_{{ light }}"
+                                           {% ifnotequal lights|get_item_in_dict:light None %}
+                                           placeholder="{{ lights|get_item_in_dict:light }}"
+                                           {% endifnotequal %}
+                                           name="{{ light }}" style="width:20%" >    %
+                                </td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+	                </table>
+                        <table class="table table-responsive" id="plugload_config">
+	                  <thead>
+	                    <tr>
+	                      <th class="col-md-1"><strong>Plugload</strong></th>
+	                      <th class="col-md-2"><strong>Nickname</strong></th>
+                          <th class="col-md-2"><strong>status</strong></th>
+	                    </tr>
+	                  </thead>
+	                  <tbody>
+
+                          {% for plugload in devSelected|get_item_in_dict:'plugload' %}
+                            <tr>
+                                <td class="col-sm-1">{{ plugload }}</td>
+                                <td class="col-sm-2">
+                                    {{ nickname|get_item_in_dict:plugload }}
+                                </td>
+                                <td class="col-sm-2">
+                                    <input type="text" id="status_{{ plugload }}" name="{{ plugload }}"
+                                           {% ifnotequal plugs|get_item_in_dict:plugload None %}
+                                           placeholder="{{ plugs|get_item_in_dict:plugload }}"
+                                           {% endifnotequal %} style="width:20%" >
+                                </td>
+                            </tr>
+                            {% endfor %}
+                      </tbody>
+	                </table>
+                  	</div>
+					</div>
+                         <div class="text-center">
+                             <button class="btn btn-lg btn-warning" id="save_config"><i class="icon-gear"></i> Save Configuration</button>
+                             <button class="btn btn-lg btn-success" id="start_app" {% if not start %}disabled{% endif %}>
+                                 <i class="icon-star-empty"></i> Start Application</button>
+                         </div>
+					</div>
+					</div>
+                    </div>
+
+           {% endif %}
+
+           {% if not devSelected %}
+
+           <div class="row">
+        <div class="col-md-4 col-xs-12 col-sm-12">
+      <div class="widget">
+            <div class="widget-header"> <i class="icon-globe"></i>
+              <h3>HVAC Controllers</h3>
+            </div>
+
+            <div class="widget-content eq_height_hvac">
+                 <div class="control-group">
+                    <div class="controls span2">
+                        {% for eachhvac in hvacs %}
+                            <label class="checkbox">
+                            <input type="checkbox" id="{{ eachhvac.agent_id }}" value="{{ eachhvac.nickname }}"> {{ eachhvac.vendor_name }} {{ eachhvac.nickname }}
+                            </label><br/>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+          </div>
+    </div>
+         <div class="col-md-4 col-xs-12 col-sm-12 ">
+      <div class="widget">
+            <div class="widget-header"> <i class="icon-globe"></i>
+              <h3>Lighting Load Controllers</h3>
+            </div>
+
+            <div class="widget-content eq_height_lt">
+            <div class="control-group">
+                    <div class="controls span2">
+
+            {% for eachlt in lights %}
+                <label class="checkbox">
+                <input type="checkbox" id="{{ eachlt.agent_id }}" value="{{ eachlt.device_model }}">{{ eachlt.vendor_name }} {{ eachlt.nickname }}
+                </label><br/>
+            {% endfor %}
+                    </div></div>
+            </div>
+          </div>
+    </div>
+         <div class="col-md-4 col-xs-12 col-sm-12 ">
+      <div class="widget">
+            <div class="widget-header"> <i class="icon-globe"></i>
+              <h3>Plug Load Controllers</h3>
+            </div>
+
+            <div class="widget-content eq_height_pl">
+            <div class="control-group">
+                    <div class="controls span2">
+                {% for eachpl in plugs %}
+                            <label class="checkbox">
+                            <input type="checkbox" id="{{ eachpl.agent_id }}" value="{{ eachpl.device_model }}">{{ eachpl.vendor_name }} {{ eachpl.nickname }}
+                            </label><br/>
+                        {% endfor %}
+                    </div></div>
+            </div>
+          </div>
+    </div>
+    </div>
+
+    <button class="btn btn-warning" id="dev_selected">Continue</button>
+           {% endif %}
+
+                                    </div></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="bottom-nav footer"> 2013-2017 &copy; Building Energy Management Open Source Software.</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/left_nav_slider.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/jquery.js"></script>
+<script type="text/javascript" language="javascript" src="/static/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function () {
+        $('#newusrs_tbl').dataTable({
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sEmptyTable": "All users active."
+            }
+        });
+        $('#allusrs_tbl').dataTable({
+            "sPaginationType": "full_numbers",
+            "oLanguage": {
+                "sEmptyTable": "No users!"
+            }
+        });
+    });
+</script>
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/bootstrap-notify.js"></script>
+<script type="text/javascript" src="/static/app_js/make_current.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/oauth.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/dr_test.js"></script>
+
+<!--switcher html start-->
+{% include 'common/theme_changer.html' %}
+</body>
+</html>

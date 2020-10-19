@@ -1,0 +1,4 @@
+#!/bin/bash
+python bemoss_lib/platform/bem_ctl.py "$@"
+
+

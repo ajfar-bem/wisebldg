@@ -1,0 +1,71 @@
+Device number,Model Name,Reference Point Name,BACnet Object Type,Index
+1,M9RTHS2 Temp/Humidity Sensor,Humidity,analogInput,133003
+1,M9RTHS2 Temp/Humidity Sensor,Temperature,analogInput,133002
+1,M9RTHS2 Temp/Humidity Sensor,0x018AFD6B [0] (1) Availability of the Temperature Sensor,binaryInput,133001
+1,M9RTHS2 Temp/Humidity Sensor,0x018AFD6B {Manufacturer},multiStateInput,133998
+1,M9RTHS2 Temp/Humidity Sensor,0x018AFD6B {Signal},binaryInput,133997
+1,M9RTHS2 Temp/Humidity Sensor,0x018AFD6B {RSSI},analogInput,133999
+1,M9RTHS2 Temp/Humidity Sensor,0x018AFD6B {HeartBeat},analogOutput,133996
+2,MXMRC1 Door Sensor,Door Status,binaryInput,135001
+2,MXMRC1 Door Sensor,0x0181D0C9 {Signal},binaryInput,135997
+2,MXMRC1 Door Sensor,0x0181D0C9 {RSSI},analogInput,135999
+2,MXMRC1 Door Sensor,0x0181D0C9 {HeartBeat},analogOutput,135996
+3,M9E0SW Occupancy Sensor,0x0194F5BF [0] (3) Supply voltage / super cap. (linear),analogInput,
+3,M9E0SW Occupancy Sensor,PIR Status,multiStateInput,137002
+3,M9E0SW Occupancy Sensor,0x0194F5BF [0] (1) Support voltage availability,binaryInput,137001
+3,M9E0SW Occupancy Sensor,0x0194F5BF {Manufacturer},multiStateInput,137998
+3,M9E0SW Occupancy Sensor,0x0194F5BF {Signal},binaryInput,137997
+3,M9E0SW Occupancy Sensor,0x0194F5BF {RSSI},analogInput,137999
+3,M9E0SW Occupancy Sensor,0x0194F5BF {HeartBeat},analogOutput,137996
+4,M9TS1 Thermostat,0x01A157DF [0] (15) Set point (linear) Min- .. Max+,analogInput,138015
+4,M9TS1 Thermostat,0x01A157DF [0] (14) Temperature (linear),analogInput,138014
+4,M9TS1 Thermostat,0x01A157DF [0] (13) Turn-switch for fan,multiStateInput,138013
+4,M9TS1 Thermostat,0x01A157DF [0] (12) Rel. Humidity (linear),analogInput,138012
+4,M9TS1 Thermostat,0x01A157DF [0] (11) Unoccupied Heating Limit,analogInput,138011
+4,M9TS1 Thermostat,0x01A157DF [0] (10) Unoccupied Cooling Limit,analogInput,138010
+4,M9TS1 Thermostat,0x01A157DF [0] (9) Occupied Set point Limit High,analogInput,138009
+4,M9TS1 Thermostat,0x01A157DF [0] (8) Occupied Set point Limit Low,analogInput,138008
+4,M9TS1 Thermostat,0x01A157DF [0] (7) Comfort Set point,analogInput,138007
+4,M9TS1 Thermostat,0x01A157DF [0] (6) Error Code,analogInput,138006
+4,M9TS1 Thermostat,0x01A157DF [0] (5) Relay 1,binaryInput,138005
+4,M9TS1 Thermostat,0x01A157DF [0] (4) Relay 2,binaryInput,138004
+4,M9TS1 Thermostat,0x01A157DF [0] (3) Relay 3,binaryInput,138003
+4,M9TS1 Thermostat,0x01A157DF [0] (2) Relay 4,binaryInput,138002
+4,M9TS1 Thermostat,0x01A157DF [0] (1) Relay 5,binaryInput,138001
+4,M9TS1 Thermostat,0x01A157DF {Manufacturer},multiStateInput,138998
+4,M9TS1 Thermostat,0x01A157DF {Signal},binaryInput,138997
+4,M9TS1 Thermostat,0x01A157DF {RSSI},analogInput,138999
+4,M9TS1 Thermostat,0x01A157DF {HeartBeat},analogOutput,138996
+5,MXMRC1 Door Sensor,Door Status,binaryInput,130001
+5,MXMRC1 Door Sensor,0x0180C54B {Signal},binaryInput,130997
+5,MXMRC1 Door Sensor,0x0180C54B {RSSI},analogInput,130999
+5,MXMRC1 Door Sensor,0x0180C54B {HeartBeat},analogOutput,130996
+6,M9RTHS2 Temp/Humidity Sensor,Humidity,analogInput,132003
+6,M9RTHS2 Temp/Humidity Sensor,Temperature,analogInput,132002
+6,M9RTHS2 Temp/Humidity Sensor,0x018AE86F [0] (1) Availability of the Temperature Sensor,binaryInput,132001
+6,M9RTHS2 Temp/Humidity Sensor,0x018AE86F {Manufacturer},multiStateInput,132998
+6,M9RTHS2 Temp/Humidity Sensor,0x018AE86F {Signal},binaryInput,132997
+6,M9RTHS2 Temp/Humidity Sensor,0x018AE86F {RSSI},analogInput,132999
+6,M9RTHS2 Temp/Humidity Sensor,0x018AE86F {HeartBeat},analogOutput,132996
+8,ML2X1 Occupancy Sensor,0x01924CD6 [0] (3) Supply voltage / super cal. (linear),volts,presentValue
+8,ML2X1 Occupancy Sensor,Illumination,analogInput,129002
+8,ML2X1 Occupancy Sensor,PIR Status,binaryInput,129001
+8,ML2X1 Occupancy Sensor,0x01924CD6 {Manufacturer},multiStateInput,129998
+8,ML2X1 Occupancy Sensor,0x01924CD6 {Signal},binaryInput,129997
+8,ML2X1 Occupancy Sensor,0x01924CD6 {RSSI},analogInput,129999
+8,ML2X1 Occupancy Sensor,0x01924CD6 {HeartBeat},analogOutput,129996
+9,M9E0SW Occupancy Sensor,0x0194F582 [0] (3) Supply voltage / super cap. (linear),volts,presentValue
+9,M9E0SW Occupancy Sensor,PIR Status,multiStateInput,131002
+9,M9E0SW Occupancy Sensor,0x0194F582 [0] (1) Support voltage availability,binaryInput,131001
+9,M9E0SW Occupancy Sensor,0x0194F582 {Manufacturer},multiStateInput,131998
+9,M9E0SW Occupancy Sensor,0x0194F582 {Signal},binaryInput,131997
+9,M9E0SW Occupancy Sensor,0x0194F582 {RSSI},analogInput,131999
+9,M9E0SW Occupancy Sensor,0x0194F582 {HeartBeat},analogOutput,131996
+,,Update interval,analogOutput,1
+,,CPU load,analogInput,2
+,,Free RAM in kb,analogInput,3
+,,System UpTime in hours,analogInput,4
+,,EnOcean Error Count,analogInput,5
+,,BACnet Stack Error Count,analogInput,6
+,,Misc Error Count,analogInput,7
+,,Create Error Log,binaryOutput,8

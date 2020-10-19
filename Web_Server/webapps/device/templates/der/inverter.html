@@ -1,0 +1,416 @@
+{% load dashboard_extras %}
+{% load switch_case %}
+{% load device_count_in_zone %}
+{% load timedelta %}
+{% load user_role %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ device_info.node.node_name }}: Solar</title>
+    <!--
+
+
+    Copyright © 2014 by Virginia Polytechnic Institute and State University
+    All rights reserved
+
+    Virginia Polytechnic Institute and State University (Virginia Tech) owns the copyright for the BEMOSS software and its
+    associated documentation ("Software") and retains rights to grant research rights under patents related to
+    the BEMOSS software to other academic institutions or non-profit research institutions.
+    You should carefully read the following terms and conditions before using this software.
+    Your use of this Software indicates your acceptance of this license agreement and all terms and conditions.
+
+    You are hereby licensed to use the Software for Non-Commercial Purpose only.  Non-Commercial Purpose means the
+    use of the Software solely for research.  Non-Commercial Purpose excludes, without limitation, any use of
+    the Software, as part of, or in any way in connection with a product or service which is sold, offered for sale,
+    licensed, leased, loaned, or rented.  Permission to use, copy, modify, and distribute this compilation
+    for Non-Commercial Purpose to other academic institutions or non-profit research institutions is hereby granted
+    without fee, subject to the following terms of this license.
+
+    Commercial Use: If you desire to use the software for profit-making or commercial purposes,
+    you agree to negotiate in good faith a license with Virginia Tech prior to such profit-making or commercial use.
+    Virginia Tech shall have no obligation to grant such license to you, and may grant exclusive or non-exclusive
+    licenses to others. You may contact the following by email to discuss commercial use:: vtippatents@vtip.org
+
+    Limitation of Liability: IN NO EVENT WILL VIRGINIA TECH, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR REDISTRIBUTE
+    THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL OR
+    CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO
+    LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A FAILURE
+    OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS), EVEN IF VIRGINIA TECH OR OTHER PARTY HAS BEEN ADVISED
+    OF THE POSSIBILITY OF SUCH DAMAGES.
+
+    For full terms and conditions, please visit https://bitbucket.org/bemoss/bemoss_os.
+
+    Address all correspondence regarding this license to Virginia Tech's electronic mail address:: vtippatents@vtip.org
+
+
+        -->
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Bootstrap -->
+<link href="/static/css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="/static/css/thin-admin.css" rel="stylesheet" media="screen">
+<link href="/static/css/font-awesome.css" rel="stylesheet" media="screen">
+<link href="/static/weathericons/css/weather-icons.css" rel="stylesheet" media="screen">
+<link media="screen" rel="stylesheet" href="/static/font-awesome-4.0.3/css/font-awesome.min.css">
+<link href="/static/style/style.css" rel="stylesheet">
+<link href="/static/style/dashboard.css" rel="stylesheet">
+<link href="/static/assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen"/>
+
+<!-- Notify CSS -->
+<link href="/static/css/bootstrap-notify/bootstrap-notify.css" rel="stylesheet">
+
+<!-- Custom Styles -->
+<link href="/static/css/bootstrap-notify/styles/alert-bangtidy.css" rel="stylesheet">
+<link href="/static/css/bootstrap-notify/styles/alert-blackgloss.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/assets/slider_enhancer/jquery-ui-slider-pips.css">
+<link rel="stylesheet" href="/static/assets/colorpicker/css/colpick.css" type="text/css"/>
+
+<!--  Slider -->
+<script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+<link href="/static/css/jquery-ui.css" rel="stylesheet" type="text/css">
+
+
+
+<!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- <script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script> -->
+<style>
+.color-box {
+	float:center;
+	width:100px;
+	height:50px;
+	margin-left: 35%;
+	margin-top: 4%;
+	border: 1px solid white;
+}
+.slider {
+    float: left;
+    clear: left;
+    width: 70%;
+    margin-left: 20%;
+	margin-top: 4%;
+
+    background: #5e9ae2; /* Old browsers */
+	background: -moz-linear-gradient(left, #000000 0%, #ffffff 100%) !important; /* FireFox 3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#000000), color-stop(100%,#ffffff)); /* Chrome, Safari 4+ */
+	background: -webkit-linear-gradient(left, #000000 0%,#ffffff 100%); /* Chrome 10+, Safari 5.1+ */
+	background: -o-linear-gradient(left, #000000 0%,#ffffff 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left, #000000 0%,#ffffff 100%); /* IE 10+ */
+	background: linear-gradient(left,#000000 0%,#ffffff 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr=’#000000’, endColorstr=’#ffffff',GradientType=1 ); /* IE 6-9 */
+  }
+
+</style>
+    <script>
+
+ var _type = "{{ device_data.agent_id }}";
+         var agent_id = "{{ device_data.agent_id }}";
+   var device_data = jQuery.parseJSON('{{ device_data|device_data_jsonify}}');
+        var zone = {{ device_info.node.node_id }};
+
+
+var role = "{{ request.user.get_profile.group.name|lower }}";
+
+    </script>
+</head>
+<body>
+{% include 'common/top_nav.html' %}
+<div class="wrapper">
+    {% include 'common/side_nav.html' %}
+    <div class="page-content">
+
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="content container">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2 class="page-title">{{ device_info.node.node_name }} : {{device_info.nickname}}</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-xs-4 col-sm-4">
+                        <div class="widget">
+                            <div class="widget-header"><i class="icon-bookmark"></i>
+                                <h3>Power </h3>
+                            </div>
+                            <!-- /widget-header -->
+                            <div class="widget-content">
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">DC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="power_dc">{{ device_data.data.power_dc }}</span><span> W</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">AC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="power_ac">{{ device_data.data.power_ac }}</span><span> W</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <!-- /shortcuts -->
+                            </div>
+                            <!-- /widget-content -->
+                        </div>
+                    </div>
+
+                    <!-- Efficiency -->
+                   <div class="col-md-4 col-xs-4 col-sm-4">
+                        <div class="widget">
+                            <div class="widget-header"><i class="icon-bookmark"></i>
+
+                                <h3>Voltage</h3>
+                            </div>
+                            <!-- /widget-header -->
+                            <div class="widget-content">
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">DC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="vdc">{{ device_data.data.vdc }}</span><span> V</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">AC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="vac">{{ device_data.data.vac }}</span><span> V</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <!-- /shortcuts -->
+                            </div>
+                            <!-- /widget-content -->
+                        </div>
+                    </div>
+ <div class="col-md-4 col-xs-4 col-sm-4">
+                        <div class="widget">
+                            <div class="widget-header"><i class="icon-bookmark"></i>
+
+                                <h3>Other Powers</h3>
+                            </div>
+                            <!-- /widget-header -->
+                            <div class="widget-content">
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">Apparent Power</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="appar_power">{{ device_data.data.appar_power }}</span><span> VA</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">Reactive Power</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="reac_power">{{ device_data.data.reac_power }}</span><span> Var</span></h2></div>
+                                        </div>
+                                    </a></div>
+
+                                <!-- /shortcuts -->
+                            </div>
+                            <!-- /widget-content -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <!-- Current Here -->
+                    <div class="col-md-4 col-xs-4 col-sm-4">
+                        <div class="widget">
+                            <div class="widget-header"><i class="icon-bookmark"></i>
+
+                                <h3>Current</h3>
+                            </div>
+                            <!-- /widget-header -->
+                            <div class="widget-content">
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">DC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="idc">{{ device_data.data.idc }}</span><span> A</span></h2></div>
+                                        </div>
+                                    </a></div>
+                                <div class="col-md-6 col-xs-6 col-sm-6">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">AC</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="iac">{{ device_data.data.iac }}</span><span> A</span></h2></div>
+                                        </div>
+                                    </a></div>
+
+                                <!-- /shortcuts -->
+                            </div>
+                            <!-- /widget-content -->
+                        </div>
+                    </div>
+
+                     <div class="col-md-8 col-xs-8 col-sm-8">
+                        <div class="widget">
+                            <div class="widget-header"><i class="icon-bookmark"></i>
+
+                                <h3>Misc</h3>
+                            </div>
+                            <!-- /widget-header -->
+                            <div class="widget-content">
+                                <div class="col-md-3 col-xs-3 col-sm-3">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">ARRAY IRRADIANCE</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="irradiance_array">{{ device_data.data.irradiance_array }}</span><span> W/m<sup>2</sup></span>
+                                            </h2></div>
+                                        </div>
+                                    </a></div>
+                                <div class="col-md-3 col-xs-3 col-sm-3">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">Power factor</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="powerfactor">{{ device_data.data.powerfactor }}</span><span> </span></h2></div>
+                                        </div>
+                                    </a></div><div class="col-md-3 col-xs-3 col-sm-3">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">CO 2 Saved</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="co2_saved">{{ device_data.data.co2_saved }}</span><span> lbs</span></h2></div>
+                                        </div>
+                                    </a></div>
+
+
+
+
+
+                                 <div class="col-md-3 col-xs-3 col-sm-3">
+                                    <a href="#" class="stats-container">
+                                        <div class="stats-heading">EFFICIENCY</div>
+                                        <div class="stats-body-alt">
+                                            <div class="text-center"><h2><span
+                                                    id="efficiency_total">{{ device_data.data.efficiency_total }}</span><span> %</span></h2></div>
+                                        </div>
+                                    </a></div>
+
+                            <!-- /widget-content -->
+
+</div>
+</div>
+ </div>
+</div>
+
+            </div>
+
+
+
+
+                                <!-- /shortcuts -->
+
+            <div class="col-md-6 col-xs-12 col-sm-6" id="dispp2"> <a href="#" class="stats-container" ></br>
+                          <div class="stats-heading"> Real power control</div>
+                          <div class="stats-body-alt text-center">
+                            <div class="text-center" >
+                            <h5> <div class="slider" id="power_limit"></div></h5>
+                               </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h6>Real Power limit <span id="brightness_val">{{ device_data.data|get_item_in_dict:'power_limit' }}</span>%</h6>
+
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Real Power limit Value <input type="text" id="power_limit_value" value="{{ device_data.data|get_item_in_dict:'power_limit' }}" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px"/></div></div>
+                           </a> </div>
+                    <div class="col-md-6 col-xs-12 col-sm-6" id="actt"> <a href="#" class="stats-container" ></br>
+              <div class="stats-heading"> Power Factor</div>
+              <div class="stats-body-alt">
+                <div class="text-center" >
+                 <h5> <div class="slider" id="pf_limit"></div></h5>
+                </div>
+                <div class="text-center" style="margin-top: 15px;">
+                <h5> Power factor limit: <span id="contrast_val">{{ device_data.data|get_item_in_dict:'pf_limit' }}</span>%</h5>
+                </div>
+                </div>
+<div class="stats-footer"><div class="text-center">Power factor limit<input type="text" id="pf_limit_value" readonly style="border:0; color:#f6931f; font-weight:bold;width:50px" value="{{ device_data.data|get_item_in_dict:'pf_limit' }}"/></div></div>
+              </a> </div>
+            <div class="row">
+                <div class="col-lg-10">
+                    <div class="widgetcontainer">
+                        <!--row start-->
+
+
+                            <div class="row">
+                    <div class="text-center">
+                        {% if request.user|has_group:'Admin' or  request.user|has_group:'Zone Manager' %}
+
+                            <button type="button" class="btn btn-default" id="submit_display_data"><i
+                                    class="icon-ok"></i>Submit All Changes
+                            </button>
+                            <!--<a href={% url 'view-device-schedule' device_data.agent.mac_address %}>-->
+                                <!--<button type="button" class="btn btn-default btn-primary" id="set_thermostat_sche"><i class="icon-bar-chart"></i>-->
+                                    <!--Set Schedule-->
+                                <!--</button>-->
+                            <!--</a>-->
+
+                        {% endif %}
+                        <a href={% url 'charts-view-device-chart' device_data.agent.mac_address %}>
+                            <button type="button" class="btn btn-default btn-danger" id="view_thermostat_data"><i class="icon-bar-chart"></i> View
+                                Past Usage and Set Points
+                            </button>
+                        </a>
+                     </div>
+                </div>
+                        </div>
+                        <!--row end-->
+                    </div>
+                </div>
+
+            <br/>
+
+        </form>
+    </div>
+</div>
+<div class="bottom-nav footer"> <span class="h6"> 2013-2017 &copy; Building Energy Management Open Source Software. </span><br/></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/static/js/jquery.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/js/left_nav_slider.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery191.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery.jqplot.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/jquery-1.10.2.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/ui/jquery-ui.js"></script>
+<script src="/static/assets/slider_enhancer/jquery-ui-slider-pips.min.js"></script>
+<script src="/static/assets/colorpicker/js/colpick.js" type="text/javascript"></script>
+
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/inverter.js"></script>
+<script type="text/javascript" src="/static/app_js/make_current.js"></script>
+<script src="/static/js/select-checkbox.js"></script>
+<script src="/static/js/to-do-admin.js"></script>
+
+<script class="include" type="text/javascript" src="/static/javascript/jquery-1.10.2.js"></script>
+<script class="include" type="text/javascript" src="/static/javascript/ui/jquery-ui.js"></script>
+<script src="/static/assets/slider_enhancer/jquery-ui-slider-pips.min.js"></script>
+<script class="include" type="text/javascript" src="/static/app_js/jquery.csrftoken.min.js"></script>
+
+<script class="include" type="text/javascript" src="/static/app_js/bootstrap-notify.js"></script>
+
+
+
+<!--switcher html start-->
+{% include 'common/theme_changer.html' %}
+
+
+</body>
+</html>
